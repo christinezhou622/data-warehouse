@@ -1,0 +1,35 @@
+-- ==========================================
+-- 1. 创建外部表 (不占空间，直接连 GCS)
+-- ==========================================
+CREATE OR REPLACE EXTERNAL TABLE `terraform-runner-485512.zoomcamp.external_green_tripdata`
+OPTIONS (
+  format = 'CSV',
+  uris = ['gs://zhou-ting-kestra/green_tripdata_2019-*.csv']
+);
+
+-- ==========================================
+-- 2. 创建普通原生表 (数据存进 BigQuery)
+-- ==========================================
+CREATE OR REPLACE TABLE `terraform-runner-485512.zoomcamp.green_tripdata_non_partitioned` AS
+SELECT * FROM `terraform-runner-485512.zoomcamp.external_green_tripdata`;
+
+-- ==========================================
+-- 3. 创建分区表 (性能优化的核心)
+-- ==========================================
+CREATE OR REPLACE TABLE `terraform-runner-485512.zoomcamp.green_tripdata_partitioned`
+PARTITION BY DATE(lpep_pickup_datetime) AS
+SELECT * FROM `terraform-runner-485512.zoomcamp.external_green_tripdata`;
+
+-- ==========================================
+-- 4. 性能大比拼 (观察右上角的 Bytes Processed)
+-- ==========================================
+
+-- A. 查询普通表 (全表扫描)
+SELECT count(*) 
+FROM `terraform-runner-485512.zoomcamp.green_tripdata_non_partitioned`
+WHERE DATE(lpep_pickup_datetime) BETWEEN '2019-01-01' AND '2019-01-31';
+
+-- B. 查询分区表 (仅扫描 1 月的数据分片)
+SELECT count(*) 
+FROM `terraform-runner-485512.zoomcamp.green_tripdata_partitioned`
+WHERE DATE(lpep_pickup_datetime) BETWEEN '2019-01-01' AND '2019-01-31';
