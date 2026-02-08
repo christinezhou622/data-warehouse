@@ -1,0 +1,38 @@
+Q1：
+SELECT count(*) 
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_non_partitioned`;
+
+Q2:
+SELECT COUNT(DISTINCT PULocationID) 
+FROM `terraform-runner-485512.ny_taxi.external_yellow_tripdata`;
+
+SELECT COUNT(DISTINCT PULocationID) 
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_non_partitioned`;
+
+Q3：
+
+Q4:
+SELECT count(*)
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_non_partitioned`
+WHERE fare_amount = 0;
+
+Q5:
+
+Q6:
+SELECT DISTINCT VendorID
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_non_partitioned`
+WHERE tpep_dropoff_datetime BETWEEN '2024-03-01' AND '2024-03-15';
+
+SELECT DISTINCT VendorID
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_optimized`
+WHERE tpep_dropoff_datetime BETWEEN '2024-03-01' AND '2024-03-15';
+
+Q7:
+
+Q8:
+
+Q9:
+SELECT count(*) 
+FROM `terraform-runner-485512.ny_taxi.yellow_tripdata_2024_non_partitioned`;
+
+The estimated bytes for SELECT count(*) is 0 MB because BigQuery retrieves this information from the table's metadata rather than scanning the actual data files.
